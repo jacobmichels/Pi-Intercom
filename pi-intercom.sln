@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30621.155
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "pi-intercom", "pi-intercom\pi-intercom.csproj", "{9E6C9D8D-CF86-465D-AF0B-636D9AF36BD3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9E6C9D8D-CF86-465D-AF0B-636D9AF36BD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E6C9D8D-CF86-465D-AF0B-636D9AF36BD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E6C9D8D-CF86-465D-AF0B-636D9AF36BD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E6C9D8D-CF86-465D-AF0B-636D9AF36BD3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BE162CAF-663B-40CD-9468-A332068B6357}
+	EndGlobalSection
+EndGlobal
