@@ -42,7 +42,7 @@ namespace pi_intercom.Hubs
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine("Exception caught in AudioUploadHub: "+e.Message);
             }
 
         }
