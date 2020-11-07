@@ -32,6 +32,7 @@ namespace pi_intercom.Hubs
                     byte[] raw;
                     await foreach (var chunk in audioStream)
                     {
+                        Console.WriteLine(speakerProc.HasExited ? "Exited" : "Running");
                         raw = Convert.FromBase64String(chunk);
                         stdin.BaseStream.Write(raw, 0, raw.Length);
                         //stdin.BaseStream.Flush();
