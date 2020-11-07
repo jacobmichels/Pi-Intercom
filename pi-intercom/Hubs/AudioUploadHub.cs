@@ -23,7 +23,11 @@ namespace pi_intercom.Hubs
                     speakerProc.StartInfo.RedirectStandardOutput = true;
                     speakerProc.StartInfo.RedirectStandardError = true;
                     speakerProc.StartInfo.Arguments = "node-speaker/index.js";
-                    speakerProc.Start();
+                    bool started = speakerProc.Start();
+                    if (!started)
+                    {
+                        Console.WriteLine("PROCESS NOT STARTED");
+                    }
                     var stdin = speakerProc.StandardInput;
                     byte[] raw;
                     await foreach (var chunk in audioStream)
@@ -43,6 +47,7 @@ namespace pi_intercom.Hubs
             catch (Exception e)
             {
                 Console.WriteLine("Exception caught in AudioUploadHub: "+e.Message);
+                throw;
             }
 
         }
