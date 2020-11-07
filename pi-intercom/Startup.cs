@@ -54,9 +54,6 @@ namespace pi_intercom
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapHub<Hubs.AudioUploadHub>("/streaminghub");
             });
 
