@@ -3,10 +3,10 @@ import { connect } from 'react-redux';
 import { Button } from 'reactstrap';
 import * as signalR from "@microsoft/signalr";
 
-let connection;
-let subject;
-let audioCtx;
-let globalStream;
+let connection: signalR.HubConnection;
+let subject: signalR.Subject<string>;
+let audioCtx: AudioContext;
+let globalStream: MediaStream;
 
 async function InitializeSignalr() {
     connection = new signalR.HubConnectionBuilder().withUrl("/streaminghub").configureLogging(signalR.LogLevel.Debug).build();
@@ -74,7 +74,7 @@ function StopRecording() {
 
 }
 
-function convertFloat32ToInt16(buffer) {
+function convertFloat32ToInt16(buffer: Float32Array) {
     let l = buffer.length;
     let buf = new Int16Array(l);
     while (l--) {
@@ -83,7 +83,7 @@ function convertFloat32ToInt16(buffer) {
     return buf.buffer;
 }
 
-function arrayBufferToBase64(buffer) {
+function arrayBufferToBase64(buffer: ArrayBuffer) {
     var binary = '';
     var bytes = new Uint8Array(buffer);
     var len = bytes.byteLength;
