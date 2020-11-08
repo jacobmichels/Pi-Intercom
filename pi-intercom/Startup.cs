@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using pi_intercom.State;
 
 namespace pi_intercom
 {
@@ -28,6 +30,8 @@ namespace pi_intercom
             {
                 configuration.RootPath = "ClientApp/build";
             });
+
+            services.AddSingleton<IPlaybackState, PlaybackState>();
 
             services.AddSignalR();
         }

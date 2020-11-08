@@ -5,16 +5,44 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
+using Microsoft.Extensions.Logging;
+using pi_intercom.State;
 
 namespace pi_intercom.Hubs
 {
     public class AudioUploadHub : Hub
     {
+        private ILogger _logger;
+        private IPlaybackState _state;
+        public AudioUploadHub(ILogger<AudioUploadHub> logger, IPlaybackState state)
+        {
+            _logger = logger;
+            _state = state;
+        }
+
+        public bool RequestAccess()
+        {
+            _logger.LogInformation("userid" + Context.ConnectionId);
+            if (_state.InUse)
+            {
+                return false;
+            }
+            _state.InUse = true;
+            _state.CurrentUser = Context.ConnectionId;
+            return true;
+        }
+
         public async Task AudioStream(IAsyncEnumerable<string> audioStream)
         {
+            _logger.LogInformation("New audio stream started.");
+            _logger.LogInformation("userid" + Context.ConnectionId);
+            if (_state.InUse && _state.CurrentUser!=Context.ConnectionId)
+            {
+                _logger.LogInformation("Cannot play new stream, device already in use.");
+                return;
+            }
             try
             {
-                Console.WriteLine("Client stream started");
                 using (Process speakerProc = new Process())
                 {
                     speakerProc.StartInfo.FileName = "node";
@@ -26,28 +54,29 @@ namespace pi_intercom.Hubs
                     bool started = speakerProc.Start();
                     if (!started)
                     {
-                        Console.WriteLine("PROCESS NOT STARTED");
+                        _logger.LogError("Node speaker process failed to start.");
+                        return;
                     }
+                    _logger.LogInformation("Node speaker process started. Receiving data.");
                     var stdin = speakerProc.StandardInput;
                     byte[] raw;
                     await foreach (var chunk in audioStream)
                     {
-                        //Console.WriteLine(speakerProc.HasExited ? "Exited" : "Running");
                         raw = Convert.FromBase64String(chunk);
                         stdin.BaseStream.Write(raw, 0, raw.Length);
-                        //stdin.BaseStream.Flush();
-                        //Console.WriteLine("chunk received");
                     }
-                    Console.WriteLine("Done");
+                    _logger.LogInformation("Audio stream complete. Killing node speaker process.");
                     speakerProc.Kill();
-                    Console.WriteLine(speakerProc.StandardOutput.ReadToEnd());
-                    Console.WriteLine(speakerProc.StandardError.ReadToEnd());
+                    _logger.LogInformation(speakerProc.StandardOutput.ReadToEnd());
+                    _logger.LogInformation(speakerProc.StandardError.ReadToEnd());
                 }
-                Console.WriteLine("Client stream ended");
+                _logger.LogInformation("Process disposed");
+                _state.InUse = false;
+                _state.CurrentUser = string.Empty;
             }
             catch (Exception e)
             {
-                Console.WriteLine("Exception caught in AudioUploadHub: "+e.Message);
+                _logger.LogError("Exception caught in AudioUploadHub: " + e.Message);
                 throw;
             }
 
